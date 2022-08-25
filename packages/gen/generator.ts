@@ -45,7 +45,7 @@ function injectBaseHref(origin: string, directory: string) {
     }
 }
 
-const generator = async (requestUrl: string) => {
+export default async (requestUrl: string) => {
     let browser: puppeteer.Browser = await createBroswer()
     const page = await browser?.newPage();
     browser.on('disconnected', createBroswer);
