@@ -8,6 +8,9 @@
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc --build",
+    "build:render": "tsc --project ./packages/render",
+    "build:gen": "tsc --project ./packages/gen",
     "start:render": "nodemon"
   },
   "keywords": [],
