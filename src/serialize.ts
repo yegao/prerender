@@ -45,6 +45,17 @@ function injectBaseHref(origin: string, directory: string) {
     }
 }
 
+async function finish(page: puppeteer.Page, browser: puppeteer.Browser, status: number = 200, content: string = '') {
+    try {
+        await page.close();
+        await browser.close();
+    } catch (err) {}
+    return {
+        status,
+        content
+    }
+}
+
 export default async (
     browser: puppeteer.Browser | null,
     requestUrl: string,
@@ -80,9 +91,6 @@ export default async (
         }
     }
 
-    // 设置新的头部
-    // await page.setExtraHTTPHeaders(...);
-
     page.evaluateOnNewDocument('customElements.forcePolyfill = true');
     page.evaluateOnNewDocument('ShadyDOM = {force: true}');
     page.evaluateOnNewDocument('ShadyCSS = {shimcssproperties: true}');
@@ -96,10 +104,7 @@ export default async (
     });
 
     let response: puppeteer.HTTPResponse | null = null;
-    // Capture main frame response. This is used in the case that rendering
-    // times out, which results in puppeteer throwing an error. This allows us
-    // to return a partial response for what was able to be rendered in that
-    // time frame.
+
     page.on('response', (r: puppeteer.HTTPResponse) => {
         if (!response) {
             response = r;
@@ -119,29 +124,17 @@ export default async (
         console.error('response does not exist');
         // 只会在页面是about:blank的时候发生
         // https://github.com/GoogleChrome/puppeteer/blob/v1.5.0/docs/api.md#pagegotourl-options.
-        await page.close();
-        await browser.close();
-        return { status: 400, content: '' };
+        return await finish(page, browser, 400, '');
     }
 
-    // Disable access to compute metadata. See
     // https://cloud.google.com/compute/docs/storing-retrieving-metadata.
     if (response.headers()['metadata-flavor'] === 'Google') {
-        await page.close();
-        // await browser.close();
-        return { status: 403, content: '' };
+        return await finish(page, browser, 403, '');
     }
 
-    // Set status to the initial server's response code. Check for a <meta
-    // name="render:status_code" content="4xx" /> tag which overrides the status
-    // code.
     let statusCode = response.status();
-    const newStatusCode = await page.$eval('meta[name="render:status_code"]', element => parseInt(element.getAttribute('content') || '')).catch(() => undefined);
     if (statusCode === 304) {
         statusCode = 200;
-    }
-    if (statusCode === 200 && newStatusCode) {
-        statusCode = newStatusCode;
     }
     await page.evaluate(removeAllScriptElements);
     const parsedUrl = url.parse(requestUrl);
@@ -151,11 +144,5 @@ export default async (
         `${dirname(parsedUrl.pathname || '')}`
     );
     const result = (await page.content()) as string;
-
-    await page.close();
-    await browser.close();
-    return {
-        status: statusCode,
-        content: result,
-    };
+    return await finish(page, browser, statusCode, result);
 }

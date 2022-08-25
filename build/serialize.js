@@ -48,6 +48,19 @@ function injectBaseHref(origin, directory) {
         document.head.insertAdjacentElement('afterbegin', base);
     }
 }
+function finish(page, browser, status = 200, content = '') {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield page.close();
+            yield browser.close();
+        }
+        catch (err) { }
+        return {
+            status,
+            content
+        };
+    });
+}
 exports.default = (browser, requestUrl, isMobile, timezoneId) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     if (!browser) {
@@ -78,8 +91,6 @@ exports.default = (browser, requestUrl, isMobile, timezoneId) => __awaiter(void 
             }
         }
     }
-    // 设置新的头部
-    // await page.setExtraHTTPHeaders(...);
     page.evaluateOnNewDocument('customElements.forcePolyfill = true');
     page.evaluateOnNewDocument('ShadyDOM = {force: true}');
     page.evaluateOnNewDocument('ShadyCSS = {shimcssproperties: true}');
@@ -93,10 +104,6 @@ exports.default = (browser, requestUrl, isMobile, timezoneId) => __awaiter(void 
         }
     });
     let response = null;
-    // Capture main frame response. This is used in the case that rendering
-    // times out, which results in puppeteer throwing an error. This allows us
-    // to return a partial response for what was able to be rendered in that
-    // time frame.
     page.on('response', (r) => {
         if (!response) {
             response = r;
@@ -115,36 +122,19 @@ exports.default = (browser, requestUrl, isMobile, timezoneId) => __awaiter(void 
         console.error('response does not exist');
         // 只会在页面是about:blank的时候发生
         // https://github.com/GoogleChrome/puppeteer/blob/v1.5.0/docs/api.md#pagegotourl-options.
-        yield page.close();
-        yield browser.close();
-        return { status: 400, content: '' };
+        return yield finish(page, browser, 400, '');
     }
-    // Disable access to compute metadata. See
     // https://cloud.google.com/compute/docs/storing-retrieving-metadata.
     if (response.headers()['metadata-flavor'] === 'Google') {
-        yield page.close();
-        // await browser.close();
-        return { status: 403, content: '' };
+        return yield finish(page, browser, 403, '');
     }
-    // Set status to the initial server's response code. Check for a <meta
-    // name="render:status_code" content="4xx" /> tag which overrides the status
-    // code.
     let statusCode = response.status();
-    const newStatusCode = yield page.$eval('meta[name="render:status_code"]', element => parseInt(element.getAttribute('content') || '')).catch(() => undefined);
     if (statusCode === 304) {
         statusCode = 200;
-    }
-    if (statusCode === 200 && newStatusCode) {
-        statusCode = newStatusCode;
     }
     yield page.evaluate(removeAllScriptElements);
     const parsedUrl = url_1.default.parse(requestUrl);
     yield page.evaluate(injectBaseHref, `${parsedUrl.protocol}//${parsedUrl.host}`, `${(0, path_1.dirname)(parsedUrl.pathname || '')}`);
     const result = (yield page.content());
-    yield page.close();
-    yield browser.close();
-    return {
-        status: statusCode,
-        content: result,
-    };
+    return yield finish(page, browser, statusCode, result);
 });

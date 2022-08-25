@@ -13,12 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const puppeteer_1 = __importDefault(require("puppeteer"));
-const path_1 = __importDefault(require("path"));
 const url_1 = __importDefault(require("url"));
 const koa_1 = __importDefault(require("koa"));
 const koa_logger_1 = __importDefault(require("koa-logger"));
 const koa_bodyparser_1 = __importDefault(require("koa-bodyparser"));
-const koa_send_1 = __importDefault(require("koa-send"));
 const koa_route_1 = __importDefault(require("koa-route"));
 const serialize_1 = __importDefault(require("./serialize"));
 let browser = null;
@@ -46,12 +44,7 @@ function main() {
         const app = new koa_1.default();
         app.use((0, koa_logger_1.default)());
         app.use((0, koa_bodyparser_1.default)());
-        app.use(koa_route_1.default.get('/', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            yield (0, koa_send_1.default)(ctx, 'index.html', {
-                root: path_1.default.resolve(__dirname)
-            });
-        })));
-        app.use(koa_route_1.default.get('/render/:url(.*)', (ctx, url) => __awaiter(this, void 0, void 0, function* () {
+        app.use(koa_route_1.default.get('/:url(.*)', (ctx, url) => __awaiter(this, void 0, void 0, function* () {
             var _a;
             if (restricted(url)) {
                 ctx.status = 403;
@@ -59,9 +52,6 @@ function main() {
             }
             const mobileVersion = 'mobile' in ctx.query ? true : false;
             const serialized = yield (0, serialize_1.default)(browser, url, mobileVersion, (_a = ctx === null || ctx === void 0 ? void 0 : ctx.query) === null || _a === void 0 ? void 0 : _a.timezoneId);
-            // for (const key in config.headers) {
-            //     ctx.set(key, config.headers[key]);
-            // }
             ctx.set('x-renderer', 'prerender');
             ctx.status = serialized.status;
             ctx.body = serialized.content;
