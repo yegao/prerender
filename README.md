@@ -13,4 +13,6 @@
 
 ### 使用方式
 
-> GET localhost:8900/https://www.example.com/a/b/c
+```
+GET localhost:8900/https://www.example.com/a/b/c
+```
