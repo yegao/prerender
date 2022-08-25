@@ -45,7 +45,12 @@ function injectBaseHref(origin: string, directory: string) {
     }
 }
 
-async function finish(page: puppeteer.Page, browser: puppeteer.Browser, status: number = 200, content: string = '') {
+async function finish(
+    page: puppeteer.Page,
+    browser: puppeteer.Browser,
+    status: number = 200,
+    content: string = ''
+) {
     try {
         await page.close();
         await browser.close();
