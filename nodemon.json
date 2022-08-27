@@ -1,6 +1,6 @@
 {
     "ignore": ["**/*.test.ts", ".git", "node_modules", "packages/**/dist/**"],
     "watch": ["packages/render"],
-    "exec": "yarn tsc --build --force && node ./packages/render/dist/index.js",
+    "exec": "tsc --build --force && node ./packages/render/dist/index.js",
     "ext": "ts"
 }

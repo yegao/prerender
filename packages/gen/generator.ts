@@ -45,10 +45,17 @@ function injectBaseHref(origin: string, directory: string) {
     }
 }
 
+let browser: puppeteer.Browser;
+let page: puppeteer.Page;
 export default async (requestUrl: string) => {
-    let browser: puppeteer.Browser = await createBroswer()
-    const page = await browser?.newPage();
-    browser.on('disconnected', createBroswer);
+    if (!browser?.isConnected()) {
+        browser = await createBroswer();
+    }
+    if (page && !page.isClosed()) {
+        await page.close();
+    }
+    page = await browser?.newPage();
+    await page.setRequestInterception(true);
     page.on('request', (interceptedRequest: puppeteer.HTTPRequest) => {
         if (restrict(interceptedRequest.url())) {
             interceptedRequest.abort();

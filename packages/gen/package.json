@@ -1,9 +1,15 @@
 {
-  "name": "gen",
+  "name": "@prerender/gen",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "./dist/index.js",
   "license": "MIT",
   "dependencies": {
-    "puppeteer": "^16.2.0"
+    "commander": "^9.4.0",
+    "path": "^0.12.7",
+    "puppeteer": "^16.2.0",
+    "url": "^0.11.0"
+  },
+  "bin": {
+    "gena": "./bin/gen.js"
   }
 }

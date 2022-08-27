@@ -1,4 +1,9 @@
-node_modules
+/node_modules
 build
 packages/**/dist
-.yarn
+.yarn/cache
+.yarn/unplugged
+.yarn/install-state.gz
+/.pnp
+.pnp.js
+.pnp.cjs

@@ -2,26 +2,15 @@
   "name": "prerender",
   "version": "1.0.0",
   "description": "",
-  "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc --build",
-    "build:render": "tsc --project ./packages/render",
-    "build:gen": "tsc --project ./packages/gen",
-    "start:render": "nodemon"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "nodemon": "^2.0.19",
-    "typescript": "^4.7.4"
-  },
-  "packageManager": "yarn@3.2.3",
-  "dependencies": {
-    "puppeteer": "^16.2.0"
+    "typescript": "^4.8.2"
   }
 }
