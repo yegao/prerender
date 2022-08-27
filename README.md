@@ -12,8 +12,43 @@
 
 通过`UA`判定请求是否来自爬虫，选择访问真实的`SPA`内容还是`prerender`生成的静态结果。
 
-### 使用方式
+
+#### prender-gen的使用方式
+比如你正在编写一个`SPA`应用，然后希望生成当前react的静态页面，易于`SEO`，可以使用prender-gen。
+* 第一步 打开自己的项目目录。
+* 本地启动项目服务。
+    比如你的项目`gameApp`是使用`create-react-app`创建的，一般可以在目录`gameApp`下执行`npm start`开启`http://localhost:3000`服务。
+* 新建一个配置文件，内容是静态文件存放路径和地址的映射。
+
+例如可以在项目`gameApp`根目录下创建一个`prerender.json`文件，填入如下内容。
+
+```json
+{
+    "./dist/shtml/home": "http://localhost:3000/home",
+    "./dist/shtml/playground":"http://localhost:3000/playground",
+    "./dist/shtml/setting/role":"http://localhost:3000/setting/role",
+    "./dist/shtml/setting/music":"http://localhost:3000/setting/music"
+}
+```
+
+* 在当前路径创建另一个终端，运行`npx prerender-gen`命令
+```
+Usage: prerender-gen [options]
+
+Options:
+  -d, --dir [dirname]  读取指定文件夹中的prerender.json中的路由配置
+  -o, --out [outdir]   输出预渲染文件的存放目录
+  -h, --help           display help for command
+```
+例如
+```
+pre
+```
+
+#### prerender-render使用方式
+
+prerender-render会启动一个`koa`服务，默认端口为`8900`，可以爬取到其他页面的静态内容并展示。
 
 ```
-GET localhost:8900/https://www.example.com/a/b/c
+GET localhost:8900/https://www.book.family.ink/webgl/basic
 ```

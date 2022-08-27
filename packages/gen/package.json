@@ -10,6 +10,6 @@
     "url": "^0.11.0"
   },
   "bin": {
-    "gena": "./bin/gen.js"
+    "prerender-gen": "./bin/gen.js"
   }
 }

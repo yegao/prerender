@@ -4,11 +4,7 @@ import path from 'path';
 
 program.option(
     "-d, --dir [dirname]",
-    "读取指定文件夹中的prerender.json中的路由配置"
-);
-program.option(
-    "-o, --out [outdir]",
-    "输出预渲染文件的存放目录"
+    "读取指定文件夹中的prerender.json中的路由配置，默认是执行prerender-gen命令所在的路径"
 );
 
 type ParsedResponse = {
