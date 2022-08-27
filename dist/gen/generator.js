@@ -97,5 +97,8 @@ exports.default = (requestUrl) => __awaiter(void 0, void 0, void 0, function* ()
     yield page.evaluate(removeAllScriptElements);
     const parsedUrl = url_1.default.parse(requestUrl);
     yield page.evaluate(injectBaseHref, `${parsedUrl.protocol}//${parsedUrl.host}`, `${(0, path_1.dirname)(parsedUrl.pathname || '')}`);
-    return yield page.content().catch(() => '');
+    const content = yield page.content().catch(() => '');
+    page.close();
+    browser.close();
+    return content;
 });

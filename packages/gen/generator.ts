@@ -94,5 +94,8 @@ export default async (requestUrl: string) => {
         `${parsedUrl.protocol}//${parsedUrl.host}`,
         `${dirname(parsedUrl.pathname || '')}`
     );
-    return await page.content().catch(() => '');
+    const content = await page.content().catch(() => '');
+    page.close();
+    browser.close();
+    return content;
 }

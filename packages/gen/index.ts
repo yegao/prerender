@@ -25,5 +25,6 @@ const parsed = parseArgv(process.argv);
         fs.mkdirSync(absoluteStaticDirectory, {recursive: true});
         fs.writeFileSync(absoluteStaticPath, staticContent);
     }
+    process.exit();
 })();
 

@@ -39,5 +39,6 @@ const parsed = (0, options_1.parseArgv)(process.argv);
             fs_1.default.mkdirSync(absoluteStaticDirectory, { recursive: true });
             fs_1.default.writeFileSync(absoluteStaticPath, staticContent);
         }
+        process.exit();
     });
 })();
