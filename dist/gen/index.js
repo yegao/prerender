@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const options_1 = require("./options");
-const generator_1 = __importDefault(require("./generator"));
+const generator_1 = require("./generator");
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const parsed = (0, options_1.parseArgv)(process.argv);
@@ -30,7 +30,7 @@ const parsed = (0, options_1.parseArgv)(process.argv);
         const staticPaths = Object.keys(config);
         for (const staticPath of staticPaths) {
             const uri = config[staticPath];
-            const staticContent = yield (0, generator_1.default)(uri);
+            const staticContent = yield (0, generator_1.generate)(uri);
             console.log(staticPath);
             const absoluteStaticPath = path_1.default.resolve(opts.dir, staticPath);
             const chunks = absoluteStaticPath.split('/');
@@ -39,6 +39,8 @@ const parsed = (0, options_1.parseArgv)(process.argv);
             fs_1.default.mkdirSync(absoluteStaticDirectory, { recursive: true });
             fs_1.default.writeFileSync(absoluteStaticPath, staticContent);
         }
+        yield generator_1.page.close();
+        yield generator_1.browser.close();
         process.exit();
     });
 })();

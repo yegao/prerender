@@ -45,9 +45,9 @@ function injectBaseHref(origin: string, directory: string) {
     }
 }
 
-let browser: puppeteer.Browser;
-let page: puppeteer.Page;
-export default async (requestUrl: string) => {
+export let browser: puppeteer.Browser;
+export let page: puppeteer.Page;
+export async function generate (requestUrl: string) {
     if (!browser?.isConnected()) {
         browser = await createBroswer();
     }
@@ -94,8 +94,5 @@ export default async (requestUrl: string) => {
         `${parsedUrl.protocol}//${parsedUrl.host}`,
         `${dirname(parsedUrl.pathname || '')}`
     );
-    const content = await page.content().catch(() => '');
-    page.close();
-    browser.close();
-    return content;
+    return await page.content().catch(() => '');
 }

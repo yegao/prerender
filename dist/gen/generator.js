@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.generate = exports.page = exports.browser = void 0;
 const puppeteer_1 = __importDefault(require("puppeteer"));
 const url_1 = __importDefault(require("url"));
 const path_1 = require("path");
@@ -56,49 +57,47 @@ function injectBaseHref(origin, directory) {
         document.head.insertAdjacentElement('afterbegin', base);
     }
 }
-let browser;
-let page;
-exports.default = (requestUrl) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!(browser === null || browser === void 0 ? void 0 : browser.isConnected())) {
-        browser = yield createBroswer();
-    }
-    if (page && !page.isClosed()) {
-        yield page.close();
-    }
-    page = yield (browser === null || browser === void 0 ? void 0 : browser.newPage());
-    yield page.setRequestInterception(true);
-    page.on('request', (interceptedRequest) => {
-        if (restrict(interceptedRequest.url())) {
-            interceptedRequest.abort();
+function generate(requestUrl) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!(exports.browser === null || exports.browser === void 0 ? void 0 : exports.browser.isConnected())) {
+            exports.browser = yield createBroswer();
         }
-        else {
-            interceptedRequest.continue();
+        if (exports.page && !exports.page.isClosed()) {
+            yield exports.page.close();
         }
-    });
-    let response = null;
-    page.on('response', (r) => {
-        if (!response) {
-            response = r;
-        }
-    });
-    try {
-        response = yield page.goto(requestUrl, {
-            timeout: 10000,
-            waitUntil: 'networkidle0',
+        exports.page = yield (exports.browser === null || exports.browser === void 0 ? void 0 : exports.browser.newPage());
+        yield exports.page.setRequestInterception(true);
+        exports.page.on('request', (interceptedRequest) => {
+            if (restrict(interceptedRequest.url())) {
+                interceptedRequest.abort();
+            }
+            else {
+                interceptedRequest.continue();
+            }
         });
-    }
-    catch (e) {
-        console.error(e);
-        return '';
-    }
-    if (!response) {
-        console.error('请求' + requestUrl + '发生错误!');
-    }
-    yield page.evaluate(removeAllScriptElements);
-    const parsedUrl = url_1.default.parse(requestUrl);
-    yield page.evaluate(injectBaseHref, `${parsedUrl.protocol}//${parsedUrl.host}`, `${(0, path_1.dirname)(parsedUrl.pathname || '')}`);
-    const content = yield page.content().catch(() => '');
-    page.close();
-    browser.close();
-    return content;
-});
+        let response = null;
+        exports.page.on('response', (r) => {
+            if (!response) {
+                response = r;
+            }
+        });
+        try {
+            response = yield exports.page.goto(requestUrl, {
+                timeout: 10000,
+                waitUntil: 'networkidle0',
+            });
+        }
+        catch (e) {
+            console.error(e);
+            return '';
+        }
+        if (!response) {
+            console.error('请求' + requestUrl + '发生错误!');
+        }
+        yield exports.page.evaluate(removeAllScriptElements);
+        const parsedUrl = url_1.default.parse(requestUrl);
+        yield exports.page.evaluate(injectBaseHref, `${parsedUrl.protocol}//${parsedUrl.host}`, `${(0, path_1.dirname)(parsedUrl.pathname || '')}`);
+        return yield exports.page.content().catch(() => '');
+    });
+}
+exports.generate = generate;
