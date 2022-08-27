@@ -1,19 +1,19 @@
 # prerender
 为解决*SPA*的*SEO*问题而实现的预渲染器。
 
+
 ## 原因
+
 目前流行的*SPA*应用存在*SEO*不好的问题，虽然提供了一些*SSR*和*SSG*方案，但都存在一些弊端，想要做到稳定高可用绝非易事。
 
 将组件渲染逻辑从客户端改到服务器执行，计算资源的成本必须考虑在内
 
 > Most importantly, SSR React apps cost a lot more in terms of resources since you need to keep a Node server up and running.
 
-与客户端程序相比，服务端程序对稳定性和性能的要求严苛得多，因此这里考虑实现一种在客户端，源码编译阶段将*SPA*的结果预先渲染为*静态结果文件*的方案。
-
-通过*UA*判定请求是否来自爬虫，选择访问真实的*SPA*内容还是*prerender*生成的静态结果。
-
+与客户端程序相比，服务端程序对稳定性和性能的要求严苛得多，因此这里考虑在客户端将*SPA*的地址结果预先渲染为*静态结果文件*。然后在接收到访问请求的时候通过*UA*判定请求是否来自爬虫，选择访问真实的*SPA*内容还是*prerender*生成的静态结果（例如使用*nginx*来做）。
 
 ## prender-gen的使用方式
+
 比如你正在编写一个*SPA*应用，然后希望生成当前react的静态页面，易于*SEO*，可以使用prender-gen。
 
 ```
@@ -42,9 +42,9 @@ Options:
 }
 ```
 
-4. 在当前路径创建另一个终端，运行`npx prerender-gen`命令。
+4. 在当前路径创建另一个终端，运行*npx prerender-gen*命令。
 
-`./build/shtml/home.html`等文件就会被创建，里面的内容是浏览器访问*http://localhost:3000/home*后的静态结果*。
+*./build/shtml/home.html*等文件就会被创建，里面的内容是浏览器访问*http://localhost:3000/home*后的*静态结果*。
 
 > 这些*静态结果文件*后续可以放入服务器，比如使用nginx配置，当访问来源于搜索引擎的爬虫，则提供这些*静态结果文件*。当不是搜索引擎的爬虫的时候访问的时候，提供正常的*SPA*主文件（一般是*index.html*）。
 
@@ -84,8 +84,8 @@ server {
 
 ## prerender-render使用方式
 
-prerender-render会启动一个`koa`服务，默认端口为`8900`，可以爬取到其他页面的静态内容并展示。例如[localhost:8900/https://www.book.family.ink/webgl/basic](localhost:8900/https://www.book.family.ink/webgl/basic)
+prerender-render会启动一个`koa`服务，默认端口为`8900`，可以爬取到其他页面的静态内容并展示。例如[http://localhost:8900/https://www.book.family.ink/webgl/basic](http://localhost:8900/https://www.book.family.ink/webgl/basic)
 
 ```
-GET localhost:8900/https://www.book.family.ink/webgl/basic
+GET http://localhost:8900/https://www.book.family.ink/webgl/basic
 ```
