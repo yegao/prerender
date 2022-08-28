@@ -52,7 +52,7 @@ function main() {
             }
             const mobileVersion = 'mobile' in ctx.query ? true : false;
             const serialized = yield (0, serialize_1.default)(browser, url, mobileVersion, (_a = ctx === null || ctx === void 0 ? void 0 : ctx.query) === null || _a === void 0 ? void 0 : _a.timezoneId);
-            ctx.set('x-renderer', 'prerender');
+            ctx.set('x-renderer', 'rendify');
             ctx.status = serialized.status;
             ctx.body = serialized.content;
         })));

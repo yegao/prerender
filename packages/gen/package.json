@@ -1,5 +1,5 @@
 {
-  "name": "@prerender/gen",
+  "name": "@rendify/gen",
   "version": "1.0.0",
   "main": "./dist/index.js",
   "license": "MIT",
@@ -10,6 +10,6 @@
     "url": "^0.11.0"
   },
   "bin": {
-    "prerender-gen": "./bin/gen.js"
+    "rendify-gen": "./bin/gen.js"
   }
 }

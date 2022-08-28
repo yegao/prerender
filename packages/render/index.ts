@@ -44,7 +44,7 @@ async function main() {
             ctx?.query?.timezoneId as string
         );
 
-        ctx.set('x-renderer', 'prerender');
+        ctx.set('x-renderer', 'rendify');
         ctx.status = serialized.status;
         ctx.body = serialized.content;
     }));

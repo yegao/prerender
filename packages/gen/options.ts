@@ -4,7 +4,7 @@ import path from 'path';
 
 program.option(
     "-d, --dir [dirname]",
-    "读取指定文件夹中的prerender.json中的路由配置，默认是执行prerender-gen命令所在的路径"
+    "读取指定文件夹中的rendify.json中的路由配置，默认是执行rendify-gen命令所在的路径"
 );
 
 type ParsedResponse = {
@@ -18,7 +18,7 @@ export function parseArgv(args: Array<string>): ParsedResponse | null {
     if (opts.dir === void 0) {
         opts.dir = process.cwd();
     }
-    const filename = path.resolve(opts.dir, 'prerender.json');
+    const filename = path.resolve(opts.dir, 'rendify.json');
     const errors: Array<string> = [];
 
     if (!fs.existsSync(filename)) {
