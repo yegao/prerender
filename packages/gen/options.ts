@@ -26,6 +26,7 @@ export function parseArgv(args: Array<string>): ParsedResponse | null {
     }
 
     if (errors.length) {
+        console.log(errors);
         return null;
     }
 

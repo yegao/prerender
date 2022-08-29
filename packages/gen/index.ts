@@ -6,6 +6,7 @@ import fs from 'fs';
 const parsed = parseArgv(process.argv);
 (async function () {
     console.log(__dirname, process.cwd());
+    console.log(parsed);
     if (parsed === null) {
         process.exitCode = 2;
         return;

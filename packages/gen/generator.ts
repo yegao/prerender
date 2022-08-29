@@ -57,6 +57,7 @@ export async function generate (requestUrl: string) {
     page = await browser?.newPage();
     await page.setRequestInterception(true);
     page.on('request', (interceptedRequest: puppeteer.HTTPRequest) => {
+        console.log(interceptedRequest.url());
         if (restrict(interceptedRequest.url())) {
             interceptedRequest.abort();
         } else {

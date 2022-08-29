@@ -20,6 +20,7 @@ const parsed = (0, options_1.parseArgv)(process.argv);
 (function () {
     return __awaiter(this, void 0, void 0, function* () {
         console.log(__dirname, process.cwd());
+        console.log(parsed);
         if (parsed === null) {
             process.exitCode = 2;
             return;

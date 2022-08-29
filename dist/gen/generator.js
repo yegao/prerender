@@ -68,6 +68,7 @@ function generate(requestUrl) {
         exports.page = yield (exports.browser === null || exports.browser === void 0 ? void 0 : exports.browser.newPage());
         yield exports.page.setRequestInterception(true);
         exports.page.on('request', (interceptedRequest) => {
+            console.log(interceptedRequest.url());
             if (restrict(interceptedRequest.url())) {
                 interceptedRequest.abort();
             }
